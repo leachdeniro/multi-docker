@@ -1,0 +1,14 @@
+services:
+  - docker
+
+before_install:
+  - docker build -t luis:react-test -f ./client/Dockerfile.dev ./client
+
+srcipt:
+  - docker run -e CI=true luis:react-test npm test
+
+after_success:
+  - docker build -t luis:multi-client ./client
+  - docker build -t luis:multi-nginx ./nginx
+  - docker build -t luis:multi-server ./server
+  - docker build -t luis:multi-worker ./worker
